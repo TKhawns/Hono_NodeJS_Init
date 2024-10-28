@@ -1,8 +1,10 @@
 import { Hono } from "hono";
 import { serverNotFound } from "./controller/response/error.js";
 import { UserRepository } from "../repository/user_repo/user.js";
-import { UserService } from "../service/user.js";
+import { UserService } from "../service/userService/user.js";
 import { AuthController } from "./controller/authController.js";
+import { jwt } from "hono/jwt";
+import { SECRET_KEY } from "../lib/constants.js";
 
 export class Server {
     private app: Hono;
@@ -38,10 +40,13 @@ export class Server {
         this.registerUserRoutes(api, authController);
     }
 
-    private registerUserRoutes(api: Hono, authCtrl: AuthController) {
+    private registerUserRoutes(api: Hono, authCtroller: AuthController) {
         const user = new Hono();
+        const authCheck = jwt({secret: SECRET_KEY});
 
-        user.post('/login', authCtrl.login);
+        user.get('/me', authCheck, authCtroller.getMyInfo);
+        user.post('/login', authCtroller.login);
+        user.post('/register', authCtroller.register);
         api.route('/user', user);
     }
 }

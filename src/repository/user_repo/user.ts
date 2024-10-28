@@ -15,4 +15,8 @@ export class UserRepository {
         }
         );
     }
+
+    public async registerUser(user: NewUser) {
+        return await db.insert(usersTable).values(user)
+    }
 }

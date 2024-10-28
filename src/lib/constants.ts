@@ -4,5 +4,6 @@ const NODE_ENVIRONMENTS = {
 };
 
 const TRACING = 'tracing';
+const SECRET_KEY = 'hono';
 
-export { NODE_ENVIRONMENTS, TRACING };
+export { NODE_ENVIRONMENTS, TRACING, SECRET_KEY };
