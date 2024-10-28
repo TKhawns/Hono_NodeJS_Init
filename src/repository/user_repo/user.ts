@@ -9,9 +9,9 @@ export class UserRepository {
         return db.insert(usersTable).values(user);
     }
 
-    public async findUserById(id: number) {
+    public async findUserByEmail(email: string) {
         return await db.query.usersTable.findFirst({
-            where: eq(usersTable.id, id),        
+            where: eq(usersTable.email, email),        
         }
         );
     }

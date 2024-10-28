@@ -1,29 +1,14 @@
-import 'dotenv/config';
-import { drizzle } from 'drizzle-orm/node-postgres';
-import { usersTable } from './db/schema.js';
-  
-const db = drizzle(process.env.DATABASE_URL!);
+import { Hono } from "hono";
+import { Server } from "./web/server.js";
+import { serve } from "@hono/node-server";
+import { env } from "process"
 
-async function main() {
-  const user: typeof usersTable.$inferInsert = {
-    name: 'John1',
-    age: 30,
-    email: 'john@example1.com',
-  };
+const app = new Hono();
 
-  await db.insert(usersTable).values(user);
-  console.log('New user created!')
+const server = new Server(app);
+server.configure();
 
-  const users = await db.select().from(usersTable);
-  console.log('Getting all users from the database: ', users)
-  /*
-  const users: {
-    id: number;
-    name: string;
-    age: number;
-    email: string;
-  }[]
-  */
-}
+const port = parseInt(env.PORT || "8090");
+console.log(`Server is running on port: ${port}`);
 
-main();
+serve({ fetch: app.fetch, port: port});
